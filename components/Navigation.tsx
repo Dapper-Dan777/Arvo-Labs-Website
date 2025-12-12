@@ -10,7 +10,6 @@ import {
   SignedOut,
   UserButton,
 } from '@clerk/nextjs';
-import Link from 'next/link';
 import ThemeToggle from '@/components/ThemeToggle';
 
 function Navigation() {
