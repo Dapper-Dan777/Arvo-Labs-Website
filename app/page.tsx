@@ -31,8 +31,12 @@ export default function HomePage() {
             konzentrieren kannst.
           </p>
           <div className="hero-actions">
-            <button className="btn-primary">Kostenlos starten</button>
-            <button className="btn-secondary">Demo ansehen</button>
+            <Link href="/sign-up">
+              <button className="btn-primary">Kostenlos starten</button>
+            </Link>
+            <Link href="/funktionen">
+              <button className="btn-secondary">Demo ansehen</button>
+            </Link>
           </div>
           <div className="hero-stats">
             <div>

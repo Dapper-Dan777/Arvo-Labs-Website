@@ -1,8 +1,14 @@
 'use client';
 
 import Link from 'next/link';
+import { SignedIn, SignedOut } from '@clerk/nextjs';
+import { CheckoutButton } from '@clerk/nextjs/experimental';
 
 export default function PricingPage() {
+  // TODO: Ersetze diese Platzhalter mit den tatsächlichen Plan-IDs aus dem Clerk Dashboard
+  const PRO_PLAN_ID = process.env.NEXT_PUBLIC_CLERK_PRO_PLAN_ID || 'cplan_xxx';
+  const ENTERPRISE_PLAN_ID = process.env.NEXT_PUBLIC_CLERK_ENTERPRISE_PLAN_ID || 'cplan_xxx';
+
   return (
     <main className="page">
       <section className="pricing" style={{ paddingTop: '120px' }}>
@@ -30,9 +36,9 @@ export default function PricingPage() {
               <li>✓ E-Mail-Automatisierung</li>
               <li>✓ Basic Support</li>
             </ul>
-            <button className="btn-secondary">
-              <Link href="/dashboard">Kostenlos starten</Link>
-            </button>
+            <Link href="/checkout">
+              <button className="btn-secondary">Kostenlos starten</button>
+            </Link>
           </div>
 
           <div className="pricing-card featured">
@@ -47,9 +53,23 @@ export default function PricingPage() {
               <li>✓ Priority Support</li>
               <li>✓ Custom Workflows</li>
             </ul>
-            <button className="btn-primary">
-              <Link href="/dashboard">Jetzt starten</Link>
-            </button>
+            <SignedIn>
+              <CheckoutButton
+                planId={PRO_PLAN_ID}
+                planPeriod="month"
+                newSubscriptionRedirectUrl="/dashboard"
+                onSubscriptionComplete={() => {
+                  console.log('Pro-Abonnement erfolgreich abgeschlossen!');
+                }}
+              >
+                <button className="btn-primary">Jetzt starten</button>
+              </CheckoutButton>
+            </SignedIn>
+            <SignedOut>
+              <Link href="/sign-up">
+                <button className="btn-primary">Jetzt starten</button>
+              </Link>
+            </SignedOut>
           </div>
 
           <div className="pricing-card">
@@ -61,9 +81,23 @@ export default function PricingPage() {
               <li>✓ On-Premise möglich</li>
               <li>✓ Custom Integrationen</li>
             </ul>
-            <button className="btn-secondary">
-              <Link href="/kontakt">Kontakt aufnehmen</Link>
-            </button>
+            <SignedIn>
+              <CheckoutButton
+                planId={ENTERPRISE_PLAN_ID}
+                planPeriod="month"
+                newSubscriptionRedirectUrl="/dashboard"
+                onSubscriptionComplete={() => {
+                  console.log('Enterprise-Abonnement erfolgreich abgeschlossen!');
+                }}
+              >
+                <button className="btn-secondary">Kontakt aufnehmen</button>
+              </CheckoutButton>
+            </SignedIn>
+            <SignedOut>
+              <Link href="/kontakt">
+                <button className="btn-secondary">Kontakt aufnehmen</button>
+              </Link>
+            </SignedOut>
           </div>
         </div>
 

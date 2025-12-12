@@ -36,13 +36,6 @@ function Navigation() {
       <Link href="/" onClick={closeMenu}>
         <div className="logo">Arvo Labs</div>
       </Link>
-      <button className="menu-toggle" onClick={toggleMenu} aria-label="Menü öffnen">
-        <span className={`hamburger ${isMenuOpen ? 'open' : ''}`}>
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-      </button>
       <nav className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
         <Link
           href="/funktionen"
@@ -76,20 +69,24 @@ function Navigation() {
           Kontakt
         </Link>
       </nav>
-      <SignedOut>
-        <div className="desktop-cta" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <ThemeToggle />
-          <SignInButton mode="modal" forceRedirectUrl="/dashboard">
-            <button className="nav-cta">Login</button>
-          </SignInButton>
-        </div>
-      </SignedOut>
-      <SignedIn>
-        <div className="desktop-cta" style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-          <ThemeToggle />
-          <UserButton />
-        </div>
-      </SignedIn>
+      <div className="desktop-cta">
+        <ThemeToggle />
+        <SignedOut>
+          <Link href="/sign-in">
+            <button className="nav-cta" type="button">Login</button>
+          </Link>
+        </SignedOut>
+        <SignedIn>
+          <UserButton afterSignOutUrl="/" />
+        </SignedIn>
+      </div>
+      <button className="menu-toggle" onClick={toggleMenu} aria-label="Menü öffnen">
+        <span className={`hamburger ${isMenuOpen ? 'open' : ''}`}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
     </header>
   );
 }

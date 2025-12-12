@@ -73,16 +73,16 @@ export default function UseCasesPage() {
 
           <div className="footer-section">
             <h4>Unternehmen</h4>
-            <a href="#">Über uns</a>
-            <a href="#">Blog</a>
+            <Link href="/ueber-uns">Über uns</Link>
+            <Link href="/blog">Blog</Link>
             <Link href="/use-cases">Use Cases</Link>
           </div>
 
           <div className="footer-section">
             <h4>Legal</h4>
-            <a href="#">Datenschutz</a>
-            <a href="#">Impressum</a>
-            <a href="#">AGB</a>
+            <Link href="/datenschutz">Datenschutz</Link>
+            <Link href="/impressum">Impressum</Link>
+            <Link href="/agb">AGB</Link>
           </div>
         </div>
 
