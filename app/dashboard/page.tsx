@@ -740,9 +740,8 @@ export default function DashboardPage() {
       ) : activeMenu === 'Posteingang' ? (
         <DashboardInbox />
       ) : activeMenu === 'Teams' ? (
-        // @ts-ignore - JavaScript component without TypeScript types
         <DashboardTeams
-          teams={teams}
+          teams={teams as any}
           onAddTeam={() => setShowTeamModal(true)}
           onDeleteTeam={deleteTeam}
           user={user}
@@ -751,41 +750,36 @@ export default function DashboardPage() {
             { id: 'user2', name: 'Max Mustermann', email: 'max@example.com' },
             { id: 'user3', name: 'Sarah Schmidt', email: 'sarah@example.com' },
             { id: 'user4', name: 'Thomas Weber', email: 'thomas@example.com' },
-          ]}
+          ] as any}
         />
       ) : activeMenu === 'Dashboards' ? (
-        // @ts-ignore - JavaScript component without TypeScript types
         <DashboardDashboards
-          dashboards={dashboards}
+          dashboards={dashboards as any}
           onAddDashboard={() => setShowDashboardModal(true)}
           onDeleteDashboard={deleteDashboard}
         />
       ) : activeMenu === 'Whiteboards' ? (
-        // @ts-ignore - JavaScript component without TypeScript types
         <DashboardWhiteboards
-          whiteboards={whiteboards}
+          whiteboards={whiteboards as any}
           onAddWhiteboard={() => setShowWhiteboardModal(true)}
           onDeleteWhiteboard={deleteWhiteboard}
         />
       ) : activeMenu === 'Formulare' ? (
-        // @ts-ignore - JavaScript component without TypeScript types
         <DashboardForms
-          forms={forms}
+          forms={forms as any}
           onAddForm={() => setShowFormModal(true)}
           onDeleteForm={deleteForm}
         />
       ) : activeMenu === 'Ziele' ? (
-        // @ts-ignore - JavaScript component without TypeScript types
         <DashboardGoals
-          goals={goals}
+          goals={goals as any}
           onAddGoal={() => setShowGoalModal(true)}
           onToggleTask={toggleGoalTask}
           onDeleteGoal={deleteGoal}
         />
       ) : activeMenu === 'Timesheets' ? (
-        // @ts-ignore - JavaScript component without TypeScript types
         <DashboardTimesheets
-          entries={timesheetEntries}
+          entries={timesheetEntries as any}
           onAddEntry={() => setShowTimesheetModal(true)}
           onDeleteEntry={deleteTimesheetEntry}
           onToggleStatus={toggleTimesheetStatus}
