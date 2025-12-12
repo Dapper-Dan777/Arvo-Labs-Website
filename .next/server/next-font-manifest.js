@@ -1,0 +1,1 @@
+self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{\"/Users/adrianthome/Arvo Labs/app/layout\":[\"static/media/eae1008d0a7c1eaf-s.p.woff2\",\"static/media/0460ac3f200db590-s.p.woff2\"]},\"appUsingSizeAdjust\":true,\"pagesUsingSizeAdjust\":false}"
