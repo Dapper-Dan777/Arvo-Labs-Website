@@ -37,6 +37,7 @@ export default function ProDashboardPage() {
   const { user, isLoaded } = useUser();
   const router = useRouter();
   const [activeMenu, setActiveMenu] = useState(MENUS.CHAT);
+  const [userIsAdmin, setUserIsAdmin] = useState(false);
 
   // Chat States
   const [messages, setMessages] = useState<Array<{ text: string; isUser: boolean }>>([]);
@@ -85,10 +86,11 @@ export default function ProDashboardPage() {
   useEffect(() => {
     if (isLoaded && user) {
       const plan = getUserPlan(user);
-      const userIsAdmin = checkIsAdmin(user);
+      const userIsAdminValue = checkIsAdmin(user);
+      setUserIsAdmin(userIsAdminValue);
       
       // Admins haben Zugriff auf alle Dashboards
-      if (userIsAdmin) {
+      if (userIsAdminValue) {
         return; // Admin kann bleiben
       }
       
@@ -208,6 +210,8 @@ export default function ProDashboardPage() {
           onDeleteEntry={() => {}}
           onToggleStatus={() => {}}
           user={user}
+          isAdmin={userIsAdmin}
+          onToggleAdmin={() => {}}
         />
       ) : activeMenu === MENUS.MORE ? (
         <DashboardMore user={user} onUserUpdate={() => {}} />
