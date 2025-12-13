@@ -130,12 +130,18 @@ export default function ProDashboardPage() {
     }, 1000);
   };
 
+  // Handler für Karten-Management (wird im Pro-Dashboard nicht verwendet, aber für Layout erforderlich)
+  const handleManageCards = () => {
+    // Pro-Dashboard hat kein Karten-Management
+  };
+
   return (
     <DashboardLayout
       user={user}
       activeMenu={activeMenu}
       setActiveMenu={setActiveMenu}
       onLogout={() => router.push('/sign-in')}
+      onManageCards={handleManageCards}
     >
       {activeMenu === MENUS.CHAT ? (
         <DashboardChat

@@ -79,6 +79,7 @@ export default function StarterDashboardPage() {
       activeMenu="Chat"
       setActiveMenu={() => {}}
       onLogout={() => router.push('/sign-in')}
+      onManageCards={() => {}}
     >
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', height: '100%' }}>
         {/* Chat-Bereich */}
