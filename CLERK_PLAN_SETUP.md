@@ -106,3 +106,4 @@ Falls du die Plan-IDs noch nicht konfiguriert hast, kannst du auch direkt zur Ch
 ```
 
 Die Checkout-Seite zeigt dann die vollständige Pricing Table von Clerk an, wo der User den Plan auswählen kann.
+

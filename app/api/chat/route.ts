@@ -4,12 +4,13 @@
  * POST /api/chat
  * 
  * Verarbeitet Chat-Anfragen mit OpenAI GPT-4o-mini.
- * Unterstützt verschiedene Aktionen: summary, keypoints, default.
+ * Unterstützt verschiedene Aktionen: summary, keypoints, default, mail, qa.
  * 
  * Request Body:
  * {
  *   prompt: string;           // Der Benutzer-Prompt
- *   action?: 'summary' | 'keypoints' | 'default';  // Optional: Aktionstyp
+ *   action?: 'summary' | 'keypoints' | 'default' | 'mail' | 'qa';  // Optional: Aktionstyp
+ *   documentText?: string;     // Optional: Text aus einem Dokument (für Dokumente-Funktion)
  * }
  * 
  * Response:
@@ -48,6 +49,8 @@ const SYSTEM_PROMPTS = {
   summary: 'Fasse den folgenden Text präzise und verständlich zusammen.',
   keypoints: 'Extrahiere die wichtigsten Punkte aus dem folgenden Text.',
   default: 'Du bist ein hilfreicher AI-Assistent namens Arvo.',
+  mail: 'Du bist ein professioneller E-Mail-Assistent. Erstelle professionelle, höfliche E-Mails basierend auf den Anforderungen des Benutzers. Die E-Mail sollte klar, präzise und geschäftsmäßig formuliert sein.',
+  qa: 'Du bist ein hilfreicher Assistent, der Fragen zu Dokumenten beantwortet. Antworte präzise und basiere deine Antworten ausschließlich auf dem bereitgestellten Dokument.',
 } as const;
 
 /**
@@ -59,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     // Request Body parsen
     const body = await request.json();
-    const { prompt, action = 'default' } = body;
+    const { prompt, action = 'default', documentText } = body;
 
     // Validierung
     if (!prompt || typeof prompt !== 'string') {
@@ -87,11 +90,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Validiere action
-    type ActionType = 'summary' | 'keypoints' | 'default';
+    type ActionType = 'summary' | 'keypoints' | 'default' | 'mail' | 'qa';
     const validActions: ActionType[] = [
       'summary',
       'keypoints',
       'default',
+      'mail',
+      'qa',
     ];
     const selectedAction: ActionType = validActions.includes(action as ActionType) 
       ? (action as ActionType) 
@@ -118,10 +123,20 @@ export async function POST(request: NextRequest) {
     // System-Prompt basierend auf Aktion auswählen
     const systemPrompt = SYSTEM_PROMPTS[selectedAction];
 
+    // User-Content zusammenstellen (mit Dokument, falls vorhanden)
+    let userContent = prompt;
+    if (documentText && documentText.trim().length > 0) {
+      // Wenn ein Dokument vorhanden ist, füge es zum Prompt hinzu
+      userContent = `Dokument:\n${documentText}\n\nAnfrage: ${prompt}`;
+    }
+
     console.log('[Chat API] Sende Anfrage an OpenAI:', {
       model: 'gpt-4o-mini',
       action: selectedAction,
       systemPrompt,
+      hasDocument: !!documentText,
+      promptLength: prompt.length,
+      documentLength: documentText?.length || 0,
     });
 
     // OpenAI Client zur Laufzeit initialisieren
@@ -137,7 +152,7 @@ export async function POST(request: NextRequest) {
         },
         {
           role: 'user',
-          content: prompt,
+          content: userContent,
         },
       ],
       temperature: 0.7,
@@ -205,3 +220,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+

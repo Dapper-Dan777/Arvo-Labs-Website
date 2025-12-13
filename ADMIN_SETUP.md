@@ -155,3 +155,4 @@ Für Backwards-Kompatibilität wird auch die E-Mail-Adresse geprüft:
 **Problem:** Admin wird nicht erkannt
 - **Lösung:** Prüfe `publicMetadata.is_admin` in Clerk Dashboard
 - **Lösung:** Stelle sicher, dass die E-Mail nicht als Fallback verwendet wird (nur für Migration)
+

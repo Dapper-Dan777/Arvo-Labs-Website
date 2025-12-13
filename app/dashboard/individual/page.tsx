@@ -129,7 +129,7 @@ export default function IndividualDashboardPage() {
   const [docPrompt, setDocPrompt] = useState('');
   const [docAnswer, setDocAnswer] = useState('');
   const [docThinking, setDocThinking] = useState(false);
-  const [docFilePath, setDocFilePath] = useState<string | null>(null);
+  const [docFileText, setDocFileText] = useState<string>('');
 
   // 🔹 States für normalen Chat / Dashboard
   const [isThinking, setIsThinking] = useState(false);
@@ -355,53 +355,121 @@ export default function IndividualDashboardPage() {
     return t;
   };
 
+  /**
+   * Dokumente-Handler: Sendet Dokument und Anfrage an OpenAI API Route
+   * 
+   * Unterstützt Text-Dateien (.txt, .md). PDFs müssen zuerst konvertiert werden.
+   */
   const handleDocRequest = async () => {
-    if (!docAction && !docPrompt.trim()) return;
+    if (!docAction && !docPrompt.trim() && !docFileText.trim()) {
+      setDocAnswer('Bitte wähle eine Aktion, gib eine Anfrage ein oder lade ein Dokument hoch.');
+      return;
+    }
+
     setDocThinking(true);
     setDocAnswer('');
 
     try {
-      const response = await fetch(SUPABASE_DOCS_URL, {
+      // Bestimme die Action für die API
+      let apiAction = docAction;
+      if (docAction === 'qa' && !docFileText.trim()) {
+        apiAction = 'default'; // Fallback wenn kein Dokument vorhanden
+      }
+
+      console.log('[Docs] Sende Anfrage an OpenAI API:', {
+        action: apiAction,
+        hasDocument: !!docFileText,
+        promptLength: docPrompt.length,
+      });
+
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          action: docAction, // 'summary' | 'keypoints' | 'qa'
-          prompt: docPrompt, // deine eigene Anforderung
-          filePath: docFilePath,
+          prompt: docPrompt || 'Analysiere das Dokument.',
+          action: apiAction,
+          documentText: docFileText || undefined,
         }),
-      }); // ⬅ genau EINE schließende Klammer + Semikolon hier
+      });
+
+      console.log('[Docs] API Response Status:', response.status);
 
       if (!response.ok) {
-        const errorText = await response.text();
-        setDocAnswer(`Fehler von der API: ${errorText}`);
+        const errorData = await response.json().catch(() => ({ error: 'Unbekannter Fehler' }));
+        const errorMessage = errorData.error || `HTTP ${response.status}: ${response.statusText}`;
+        
+        console.error('[Docs] API Fehler:', {
+          status: response.status,
+          error: errorMessage,
+        });
+
+        setDocAnswer(`Fehler: ${errorMessage}`);
         return;
       }
 
       const data = await response.json();
-      setDocAnswer(data.answer || 'Keine Antwort erhalten.');
+      console.log('[Docs] API Antwort erhalten:', {
+        success: data.success,
+        responseLength: data.response?.length,
+      });
+
+      if (!data.success) {
+        const errorMessage = data.error || 'Keine Antwort erhalten.';
+        console.error('[Docs] API Fehler in Response:', errorMessage);
+        setDocAnswer(`Fehler: ${errorMessage}`);
+        return;
+      }
+
+      if (!data.response) {
+        console.error('[Docs] Keine Antwort in Response-Daten');
+        setDocAnswer('Keine Antwort erhalten. Bitte versuche es erneut.');
+        return;
+      }
+
+      // Erfolgreiche Antwort setzen
+      setDocAnswer(data.response);
     } catch (err) {
-      setDocAnswer(`Netzwerkfehler: ${String(err)}`);
+      console.error('[Docs] Netzwerkfehler:', err);
+      const errorMessage = err instanceof Error 
+        ? err.message 
+        : 'Netzwerkfehler beim Verarbeiten des Dokuments.';
+      setDocAnswer(`Fehler: ${errorMessage}`);
     } finally {
       setDocThinking(false);
     }
   };
+  /**
+   * File Change Handler: Liest Text-Dateien ein
+   */
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-
-    const fileName = `${Date.now()}-${file.name}`;
-
-    if (!supabase) return;
-    const { data, error } = await supabase.storage
-      .from('documents') // Bucket-Name
-      .upload(fileName, file);
-
-    if (error) {
-      setDocAnswer(`Upload-Fehler: ${error.message}`);
+    if (!file) {
+      setDocFileText('');
       return;
     }
 
-    setDocFilePath(data.path); // Pfad für Edge Function merken
+    // Nur Text-Dateien unterstützen (.txt, .md, .json, etc.)
+    if (file.type.startsWith('text/') || 
+        file.name.endsWith('.txt') || 
+        file.name.endsWith('.md') || 
+        file.name.endsWith('.json')) {
+      try {
+        const text = await file.text();
+        setDocFileText(text);
+        console.log('[Docs] Datei eingelesen:', {
+          fileName: file.name,
+          fileSize: file.size,
+          textLength: text.length,
+        });
+      } catch (err) {
+        console.error('[Docs] Fehler beim Lesen der Datei:', err);
+        setDocFileText('');
+        setDocAnswer('Fehler beim Lesen der Datei. Bitte verwende eine Text-Datei (.txt, .md, etc.).');
+      }
+    } else {
+      setDocFileText('');
+      setDocAnswer('Bitte lade eine Text-Datei hoch (.txt, .md, .json). PDF-Unterstützung kommt bald.');
+    }
   };
 
   useEffect(() => {
@@ -452,11 +520,7 @@ export default function IndividualDashboardPage() {
     }
   };
 
-  const SUPABASE_DOCS_URL =
-    'https://cywpgkrahaioosmewpms.supabase.co/functions/v1/openai-docs';
-
-  const SUPABASE_MAIL_URL =
-    'https://cywpgkrahaioosmewpms.supabase.co/functions/v1/send-mail';
+  // Supabase URLs entfernt - verwende jetzt /api/chat
 
   /**
    * Chat-Handler: Sendet Nachricht an OpenAI API Route
@@ -553,33 +617,93 @@ export default function IndividualDashboardPage() {
     }
   };
 
+  /**
+   * Mail-Handler: Generiert E-Mail mit OpenAI
+   * 
+   * Der Benutzer gibt Betreff und Inhalt ein, und die AI generiert eine professionelle E-Mail.
+   */
   const handleSendMail = async () => {
-    if (!to.trim() || !subject.trim() || !body.trim()) return;
+    if (!to.trim() || !subject.trim() || !body.trim()) {
+      setMailResult('Bitte fülle alle Felder aus.');
+      setMailError(true);
+      return;
+    }
 
     setSendingMail(true);
     setMailResult('');
     setMailError(false);
 
     try {
-      const res = await fetch(SUPABASE_MAIL_URL, {
+      // Erstelle Prompt für Mail-Generierung
+      const mailPrompt = `Erstelle eine professionelle E-Mail mit folgenden Details:
+- An: ${to}
+- Betreff: ${subject}
+- Inhalt/Anfrage: ${body}
+
+Die E-Mail sollte professionell, höflich und klar formuliert sein.`;
+
+      console.log('[Mail] Sende Mail-Generierungsanfrage an OpenAI API');
+
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ to, subject, body }),
+        body: JSON.stringify({
+          prompt: mailPrompt,
+          action: 'mail',
+        }),
       });
 
-      if (!res.ok) {
-        const text = await res.text();
-        setMailResult(`Fehler beim Senden: ${text}`);
+      console.log('[Mail] API Response Status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unbekannter Fehler' }));
+        const errorMessage = errorData.error || `HTTP ${response.status}: ${response.statusText}`;
+        
+        console.error('[Mail] API Fehler:', {
+          status: response.status,
+          error: errorMessage,
+        });
+
+        setMailResult(`Fehler: ${errorMessage}`);
         setMailError(true);
         return;
       }
 
-      setMailResult('E-Mail erfolgreich gesendet.');
-      setTo('');
-      setSubject('');
-      setBody('');
+      const data = await response.json();
+      console.log('[Mail] API Antwort erhalten:', {
+        success: data.success,
+        responseLength: data.response?.length,
+      });
+
+      if (!data.success) {
+        const errorMessage = data.error || 'Keine Antwort erhalten.';
+        console.error('[Mail] API Fehler in Response:', errorMessage);
+        setMailResult(`Fehler: ${errorMessage}`);
+        setMailError(true);
+        return;
+      }
+
+      if (!data.response) {
+        console.error('[Mail] Keine Antwort in Response-Daten');
+        setMailResult('Keine Antwort erhalten. Bitte versuche es erneut.');
+        setMailError(true);
+        return;
+      }
+
+      // Erfolgreiche Mail-Generierung
+      setMailResult(`E-Mail generiert:\n\n${data.response}\n\nHinweis: Die E-Mail wurde generiert, aber noch nicht gesendet. Kopiere den Text und sende ihn manuell.`);
+      setMailError(false);
+      
+      // Optional: Felder leeren
+      // setTo('');
+      // setSubject('');
+      // setBody('');
     } catch (err) {
-      setMailResult(`Netzwerkfehler: ${String(err)}`);
+      console.error('[Mail] Netzwerkfehler:', err);
+      const errorMessage = err instanceof Error 
+        ? err.message 
+        : 'Netzwerkfehler beim Generieren der E-Mail.';
+      setMailResult(`Fehler: ${errorMessage}`);
       setMailError(true);
     } finally {
       setSendingMail(false);

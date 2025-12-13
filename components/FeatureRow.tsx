@@ -99,3 +99,4 @@ export default function FeatureRow({ feature, isLast }: FeatureRowProps) {
     </div>
   );
 }
+

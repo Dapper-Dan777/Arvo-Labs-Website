@@ -141,3 +141,4 @@ export async function POST(request: NextRequest) {
   // Andere Event-Typen werden ignoriert (aber bestätigt)
   return NextResponse.json({ received: true });
 }
+

@@ -50,6 +50,8 @@ export default function ProDashboardPage() {
   const [docPrompt, setDocPrompt] = useState('');
   const [docAnswer, setDocAnswer] = useState('');
   const [docThinking, setDocThinking] = useState(false);
+  const [docFile, setDocFile] = useState<File | null>(null);
+  const [docFileText, setDocFileText] = useState<string>('');
 
   // Mail States
   const [to, setTo] = useState('');
@@ -207,22 +209,218 @@ export default function ProDashboardPage() {
     }
   };
 
+  /**
+   * Dokumente-Handler: Sendet Dokument und Anfrage an OpenAI API Route
+   * 
+   * Unterstützt Text-Dateien (.txt, .md). PDFs müssen zuerst konvertiert werden.
+   */
   const handleDocRequest = async () => {
-    // TODO: Implementiere Dokumenten-Logik
+    if (!docAction && !docPrompt.trim() && !docFileText.trim()) {
+      setDocAnswer('Bitte wähle eine Aktion, gib eine Anfrage ein oder lade ein Dokument hoch.');
+      return;
+    }
+
     setDocThinking(true);
-    setTimeout(() => {
-      setDocAnswer('Dokumenten-Funktion wird noch implementiert.');
+    setDocAnswer('');
+
+    try {
+      // Bestimme die Action für die API
+      let apiAction = docAction;
+      if (docAction === 'qa' && !docFileText.trim()) {
+        apiAction = 'default'; // Fallback wenn kein Dokument vorhanden
+      }
+
+      console.log('[Docs] Sende Anfrage an OpenAI API:', {
+        action: apiAction,
+        hasDocument: !!docFileText,
+        promptLength: docPrompt.length,
+      });
+
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: docPrompt || 'Analysiere das Dokument.',
+          action: apiAction,
+          documentText: docFileText || undefined,
+        }),
+      });
+
+      console.log('[Docs] API Response Status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unbekannter Fehler' }));
+        const errorMessage = errorData.error || `HTTP ${response.status}: ${response.statusText}`;
+        
+        console.error('[Docs] API Fehler:', {
+          status: response.status,
+          error: errorMessage,
+        });
+
+        setDocAnswer(`Fehler: ${errorMessage}`);
+        return;
+      }
+
+      const data = await response.json();
+      console.log('[Docs] API Antwort erhalten:', {
+        success: data.success,
+        responseLength: data.response?.length,
+      });
+
+      if (!data.success) {
+        const errorMessage = data.error || 'Keine Antwort erhalten.';
+        console.error('[Docs] API Fehler in Response:', errorMessage);
+        setDocAnswer(`Fehler: ${errorMessage}`);
+        return;
+      }
+
+      if (!data.response) {
+        console.error('[Docs] Keine Antwort in Response-Daten');
+        setDocAnswer('Keine Antwort erhalten. Bitte versuche es erneut.');
+        return;
+      }
+
+      // Erfolgreiche Antwort setzen
+      setDocAnswer(data.response);
+    } catch (err) {
+      console.error('[Docs] Netzwerkfehler:', err);
+      const errorMessage = err instanceof Error 
+        ? err.message 
+        : 'Netzwerkfehler beim Verarbeiten des Dokuments.';
+      setDocAnswer(`Fehler: ${errorMessage}`);
+    } finally {
       setDocThinking(false);
-    }, 1000);
+    }
   };
 
+  /**
+   * File Change Handler: Liest Text-Dateien ein
+   */
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) {
+      setDocFile(null);
+      setDocFileText('');
+      return;
+    }
+
+    setDocFile(file);
+
+    // Nur Text-Dateien unterstützen (.txt, .md, .json, etc.)
+    if (file.type.startsWith('text/') || 
+        file.name.endsWith('.txt') || 
+        file.name.endsWith('.md') || 
+        file.name.endsWith('.json')) {
+      try {
+        const text = await file.text();
+        setDocFileText(text);
+        console.log('[Docs] Datei eingelesen:', {
+          fileName: file.name,
+          fileSize: file.size,
+          textLength: text.length,
+        });
+      } catch (err) {
+        console.error('[Docs] Fehler beim Lesen der Datei:', err);
+        setDocFileText('');
+        alert('Fehler beim Lesen der Datei. Bitte verwende eine Text-Datei (.txt, .md, etc.).');
+      }
+    } else {
+      setDocFileText('');
+      alert('Bitte lade eine Text-Datei hoch (.txt, .md, .json). PDF-Unterstützung kommt bald.');
+    }
+  };
+
+  /**
+   * Mail-Handler: Generiert E-Mail mit OpenAI
+   * 
+   * Der Benutzer gibt Betreff und Inhalt ein, und die AI generiert eine professionelle E-Mail.
+   */
   const handleSendMail = async () => {
-    // TODO: Implementiere Mail-Logik
+    if (!to.trim() || !subject.trim() || !body.trim()) {
+      setMailResult('Bitte fülle alle Felder aus.');
+      setMailError(true);
+      return;
+    }
+
     setSendingMail(true);
-    setTimeout(() => {
-      setMailResult('Mail-Funktion wird noch implementiert.');
+    setMailResult('');
+    setMailError(false);
+
+    try {
+      // Erstelle Prompt für Mail-Generierung
+      const mailPrompt = `Erstelle eine professionelle E-Mail mit folgenden Details:
+- An: ${to}
+- Betreff: ${subject}
+- Inhalt/Anfrage: ${body}
+
+Die E-Mail sollte professionell, höflich und klar formuliert sein.`;
+
+      console.log('[Mail] Sende Mail-Generierungsanfrage an OpenAI API');
+
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: mailPrompt,
+          action: 'mail',
+        }),
+      });
+
+      console.log('[Mail] API Response Status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unbekannter Fehler' }));
+        const errorMessage = errorData.error || `HTTP ${response.status}: ${response.statusText}`;
+        
+        console.error('[Mail] API Fehler:', {
+          status: response.status,
+          error: errorMessage,
+        });
+
+        setMailResult(`Fehler: ${errorMessage}`);
+        setMailError(true);
+        return;
+      }
+
+      const data = await response.json();
+      console.log('[Mail] API Antwort erhalten:', {
+        success: data.success,
+        responseLength: data.response?.length,
+      });
+
+      if (!data.success) {
+        const errorMessage = data.error || 'Keine Antwort erhalten.';
+        console.error('[Mail] API Fehler in Response:', errorMessage);
+        setMailResult(`Fehler: ${errorMessage}`);
+        setMailError(true);
+        return;
+      }
+
+      if (!data.response) {
+        console.error('[Mail] Keine Antwort in Response-Daten');
+        setMailResult('Keine Antwort erhalten. Bitte versuche es erneut.');
+        setMailError(true);
+        return;
+      }
+
+      // Erfolgreiche Mail-Generierung
+      setMailResult(`E-Mail generiert:\n\n${data.response}\n\nHinweis: Die E-Mail wurde generiert, aber noch nicht gesendet. Kopiere den Text und sende ihn manuell.`);
+      setMailError(false);
+      
+      // Optional: Felder leeren
+      // setTo('');
+      // setSubject('');
+      // setBody('');
+    } catch (err) {
+      console.error('[Mail] Netzwerkfehler:', err);
+      const errorMessage = err instanceof Error 
+        ? err.message 
+        : 'Netzwerkfehler beim Generieren der E-Mail.';
+      setMailResult(`Fehler: ${errorMessage}`);
+      setMailError(true);
+    } finally {
       setSendingMail(false);
-    }, 1000);
+    }
   };
 
   // Handler für Karten-Management (wird im Pro-Dashboard nicht verwendet, aber für Layout erforderlich)
@@ -257,7 +455,7 @@ export default function ProDashboardPage() {
           onChangeAction={setDocAction}
           onChangePrompt={setDocPrompt}
           onSendRequest={handleDocRequest}
-          onFileChange={() => {}}
+          onFileChange={handleFileChange}
         />
       ) : activeMenu === MENUS.MAIL ? (
         <DashboardMail
@@ -297,3 +495,4 @@ export default function ProDashboardPage() {
     </DashboardLayout>
   );
 }
+

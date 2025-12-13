@@ -188,3 +188,4 @@ Die Features wurden automatisch aus den Dashboard-Implementierungen abgeleitet:
 **Problem:** User landet im falschen Dashboard
 - **Lösung:** Prüfe `user.publicMetadata.plan` in Clerk Dashboard
 - **Lösung:** Prüfe Routing-Logik in `app/dashboard/page.tsx`
+

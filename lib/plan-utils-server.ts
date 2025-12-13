@@ -101,3 +101,4 @@ export async function getCurrentUserIsAdmin() {
   const user = await currentUser();
   return isAdminClient(user);
 }
+

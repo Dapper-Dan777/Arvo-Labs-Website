@@ -191,3 +191,4 @@ const { data } = await supabase
 - ✅ Plan-Prüfung sowohl in Middleware als auch Client-side
 - ✅ Server-side Redirects verhindern direkten Zugriff
 - ⚠️ API Route `/api/users/set-plan` sollte für Produktion zusätzlich gesichert werden (Webhook-Secret, Admin-Check)
+

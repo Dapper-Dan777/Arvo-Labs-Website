@@ -11,3 +11,4 @@ export default function PreisePage() {
   // Weiterleitung zur neuen Pricing-Seite
   redirect('/pricing');
 }
+

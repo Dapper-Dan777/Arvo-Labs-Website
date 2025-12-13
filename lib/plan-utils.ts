@@ -129,3 +129,4 @@ export function hasRouteAccess(user: any, routePlan: 'starter' | 'pro' | 'enterp
   const userPlan = getUserPlan(user);
   return hasPlanAccess(userPlan, routePlan);
 }
+
