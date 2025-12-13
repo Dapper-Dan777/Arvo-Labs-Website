@@ -59,10 +59,27 @@ export default function ProDashboardPage() {
   const [mailError, setMailError] = useState(false);
 
   // Goals States
-  const [goals, setGoals] = useState<any[]>([]);
+  const [goals, setGoals] = useState<Array<{
+    id: number;
+    title: string;
+    progress: number;
+    deadline: string;
+    status: string;
+    tasks: Array<{ name: string; completed: boolean }>;
+  }>>([]);
 
   // Timesheets States
-  const [timesheetEntries, setTimesheetEntries] = useState<any[]>([]);
+  const [timesheetEntries, setTimesheetEntries] = useState<Array<{
+    id: number;
+    project: string;
+    task: string;
+    date: string;
+    hours: number;
+    status: string;
+    userId: string | undefined;
+    userName: string;
+    created_at: string;
+  }>>([]);
 
   // Guard: Prüfe, ob User Pro-Plan hat (oder Admin ist)
   useEffect(() => {
@@ -182,8 +199,7 @@ export default function ProDashboardPage() {
           goals={goals}
           onAddGoal={() => {}}
           onDeleteGoal={() => {}}
-          onToggleStatus={() => {}}
-          user={user}
+          onToggleTask={() => {}}
         />
       ) : activeMenu === MENUS.TIMESHEETS ? (
         <DashboardTimesheets
