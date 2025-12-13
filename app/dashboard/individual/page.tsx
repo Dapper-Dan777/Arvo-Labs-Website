@@ -452,51 +452,101 @@ export default function IndividualDashboardPage() {
     }
   };
 
-  const SUPABASE_CHAT_URL =
-    'https://cywpgkrahaioosmewpms.supabase.co/functions/v1/openai-chat';
-
   const SUPABASE_DOCS_URL =
     'https://cywpgkrahaioosmewpms.supabase.co/functions/v1/openai-docs';
 
   const SUPABASE_MAIL_URL =
     'https://cywpgkrahaioosmewpms.supabase.co/functions/v1/send-mail';
 
+  /**
+   * Chat-Handler: Sendet Nachricht an OpenAI API Route
+   * 
+   * Verwendet die neue /api/chat Route statt Supabase Edge Function.
+   * Zeigt Loading-State und Fehlerbehandlung.
+   */
   const handleSend = async () => {
     if (!input.trim()) return;
 
-    const userMsg = { text: input, isUser: true };
+    const userMessage = input.trim();
+    const userMsg = { text: userMessage, isUser: true };
     setMessages((prev) => [...prev, userMsg]);
-    const message = input;
     setInput('');
 
     try {
       setIsThinking(true);
+      console.log('[Chat] Sende Nachricht an OpenAI API:', { prompt: userMessage });
 
-      const response = await fetch(SUPABASE_CHAT_URL, {
+      const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message }),
+        body: JSON.stringify({
+          prompt: userMessage,
+          action: 'default',
+        }),
       });
 
+      console.log('[Chat] API Response Status:', response.status);
+
       if (!response.ok) {
-        const errorText = await response.text();
+        const errorData = await response.json().catch(() => ({ error: 'Unbekannter Fehler' }));
+        const errorMessage = errorData.error || `HTTP ${response.status}: ${response.statusText}`;
+        
+        console.error('[Chat] API Fehler:', {
+          status: response.status,
+          error: errorMessage,
+        });
+
         setMessages((prev) => [
           ...prev,
-          { text: `Fehler von der API: ${errorText}`, isUser: false },
+          { 
+            text: `Fehler: ${errorMessage}`, 
+            isUser: false 
+          },
         ]);
         return;
       }
 
       const data = await response.json();
+      console.log('[Chat] API Antwort erhalten:', {
+        success: data.success,
+        responseLength: data.response?.length,
+      });
 
+      if (!data.success) {
+        const errorMessage = data.error || 'Keine Antwort erhalten.';
+        console.error('[Chat] API Fehler in Response:', errorMessage);
+        
+        setMessages((prev) => [
+          ...prev,
+          { text: `Fehler: ${errorMessage}`, isUser: false },
+        ]);
+        return;
+      }
+
+      if (!data.response) {
+        console.error('[Chat] Keine Antwort in Response-Daten');
+        setMessages((prev) => [
+          ...prev,
+          { text: 'Keine Antwort erhalten. Bitte versuche es erneut.', isUser: false },
+        ]);
+        return;
+      }
+
+      // Erfolgreiche Antwort hinzufügen
       setMessages((prev) => [
         ...prev,
-        { text: data.message || 'Keine Antwort erhalten.', isUser: false },
+        { text: data.response, isUser: false },
       ]);
     } catch (err) {
+      console.error('[Chat] Netzwerkfehler:', err);
+      
+      const errorMessage = err instanceof Error 
+        ? err.message 
+        : 'Netzwerkfehler beim Senden der Nachricht.';
+      
       setMessages((prev) => [
         ...prev,
-        { text: `Netzwerkfehler: ${String(err)}`, isUser: false },
+        { text: `Fehler: ${errorMessage}`, isUser: false },
       ]);
     } finally {
       setIsThinking(false);

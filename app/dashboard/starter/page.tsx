@@ -55,6 +55,12 @@ export default function StarterDashboardPage() {
     return null;
   }
 
+  /**
+   * Chat-Handler: Sendet Nachricht an OpenAI API Route
+   * 
+   * Verwendet die neue /api/chat Route.
+   * Zeigt Loading-State und Fehlerbehandlung.
+   */
   const handleSend = async () => {
     if (!input.trim()) return;
 
@@ -63,14 +69,84 @@ export default function StarterDashboardPage() {
     setInput('');
     setIsThinking(true);
 
-    // TODO: Hier Chat-Logik einbinden (z.B. API-Call)
-    setTimeout(() => {
+    try {
+      console.log('[Chat] Sende Nachricht an OpenAI API:', { prompt: userMessage });
+
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: userMessage,
+          action: 'default',
+        }),
+      });
+
+      console.log('[Chat] API Response Status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unbekannter Fehler' }));
+        const errorMessage = errorData.error || `HTTP ${response.status}: ${response.statusText}`;
+        
+        console.error('[Chat] API Fehler:', {
+          status: response.status,
+          error: errorMessage,
+        });
+
+        setMessages((prev) => [
+          ...prev,
+          { 
+            text: `Fehler: ${errorMessage}`, 
+            isUser: false 
+          },
+        ]);
+        return;
+      }
+
+      const data = await response.json();
+      console.log('[Chat] API Antwort erhalten:', {
+        success: data.success,
+        responseLength: data.response?.length,
+      });
+
+      if (!data.success) {
+        const errorMessage = data.error || 'Keine Antwort erhalten.';
+        console.error('[Chat] API Fehler in Response:', errorMessage);
+        
+        setMessages((prev) => [
+          ...prev,
+          { text: `Fehler: ${errorMessage}`, isUser: false },
+        ]);
+        return;
+      }
+
+      if (!data.response) {
+        console.error('[Chat] Keine Antwort in Response-Daten');
+        setMessages((prev) => [
+          ...prev,
+          { text: 'Keine Antwort erhalten. Bitte versuche es erneut.', isUser: false },
+        ]);
+        return;
+      }
+
+      // Erfolgreiche Antwort hinzufügen
       setMessages((prev) => [
         ...prev,
-        { text: 'Dies ist eine Beispiel-Antwort. Die Chat-Funktion wird noch implementiert.', isUser: false },
+        { text: data.response, isUser: false },
       ]);
+    } catch (err) {
+      console.error('[Chat] Netzwerkfehler:', err);
+      
+      const errorMessage = err instanceof Error 
+        ? err.message 
+        : 'Netzwerkfehler beim Senden der Nachricht.';
+      
+      setMessages((prev) => [
+        ...prev,
+        { text: `Fehler: ${errorMessage}`, isUser: false },
+      ]);
+    } finally {
       setIsThinking(false);
-    }, 1000);
+    }
   };
 
   return (
