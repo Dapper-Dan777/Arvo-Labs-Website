@@ -23,10 +23,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-// Initialisiere OpenAI Client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+/**
+ * Initialisiert den OpenAI Client lazy (zur Laufzeit, nicht beim Build)
+ * 
+ * WICHTIG: Client wird erst initialisiert, wenn die Route aufgerufen wird,
+ * um Build-Fehler zu vermeiden, wenn OPENAI_API_KEY nicht gesetzt ist.
+ */
+function getOpenAIClient(): OpenAI {
+  const apiKey = process.env.OPENAI_API_KEY;
+  
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY environment variable is not set');
+  }
+  
+  return new OpenAI({
+    apiKey: apiKey,
+  });
+}
 
 /**
  * System-Prompts für verschiedene Aktionen
@@ -110,6 +123,9 @@ export async function POST(request: NextRequest) {
       action: selectedAction,
       systemPrompt,
     });
+
+    // OpenAI Client zur Laufzeit initialisieren
+    const openai = getOpenAIClient();
 
     // OpenAI API aufrufen
     const completion = await openai.chat.completions.create({
