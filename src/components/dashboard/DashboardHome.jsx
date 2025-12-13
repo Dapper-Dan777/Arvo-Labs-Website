@@ -134,7 +134,7 @@ function DashboardHome({ user, workflows }) {
                   marginLeft: '6px',
                   padding: '2px 6px',
                   borderRadius: '999px',
-                  background: 'rgba(102, 252, 241, 0.15)',
+                  background: 'rgba(99, 102, 241, 0.15)',
                   color: 'var(--primary)',
                 }}
               >

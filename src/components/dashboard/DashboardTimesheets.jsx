@@ -582,8 +582,8 @@ function DashboardTimesheets({ entries = [], onAddEntry, onDeleteEntry, onToggle
                       fontSize: '11px',
                       background:
                         entry.status === 'laufend'
-                          ? 'rgba(102, 252, 241, 0.15)'
-                          : 'rgba(69, 162, 158, 0.15)',
+                          ? 'rgba(99, 102, 241, 0.15)'
+                          : 'rgba(99, 102, 241, 0.15)',
                       color:
                         entry.status === 'laufend' ? 'var(--primary)' : 'var(--accent)',
                       cursor: onToggleStatus ? 'pointer' : 'default',

@@ -5,60 +5,148 @@
 }
 
 :root {
-  /* Neue Farbpalette - Dark Mode (Standard) */
-  --bg-body: #0B0C10;
-  --bg-surface: #1F2833;
-  --bg-elevated: #0B0C10;
+  /* ============================================
+     MODERNE SAAS-FARBPALETTE - DARK MODE
+     ============================================
+     Design-Update: Ersetzt Neon-/Gaming-Look durch professionelles SaaS-Design
+     
+     Farb-Token:
+     - Hintergrund: sehr dunkles, neutrales Grau/Anthrazit (#0F1419, #1A1F2E)
+     - Primärfarbe: modernes, leicht entsättigtes Blau-Violett (#6366F1 - Indigo)
+     - Sekundärfarbe: dezentes Akzent-Blau/Lila (#818CF8 - helleres Indigo)
+     - Text: hohe Lesbarkeit mit hellem Grau/Weiß (#E5E7EB) für Fließtext
+     - Text muted: schwächeres Grau (#9CA3AF) für Secondary Text
+     - Borders: subtile, transparente Grautöne für dezente Trennlinien
+     
+     Alle Neon-Effekte (Türkis #66FCF1, Teal #45A29E) wurden entfernt.
+     ============================================ */
+  
+  /* Hintergrund: sehr dunkles, neutrales Grau/Anthrazit */
+  --bg-body: #0F1419;
+  --bg-surface: #1A1F2E;
+  --bg-elevated: #0F1419;
 
-  --bg: #0B0C10;
-  --card-bg: rgba(31, 40, 51, 0.95);
+  --bg: #0F1419;
+  --card-bg: rgba(26, 31, 46, 0.95);
 
-  --text-primary: #C5C6C7;
-  --text-muted: #C5C6C7;
-  --text: #C5C6C7;
-  --border-subtle: #45A29E;
+  /* Textfarben: hohe Lesbarkeit, helles Grau/Weiß für Fließtext, schwächeres Grau für Secondary */
+  --text-primary: #E5E7EB;
+  --text-muted: #9CA3AF;
+  --text: #E5E7EB;
+  --border-subtle: rgba(148, 163, 184, 0.2);
 
-  --primary: #66FCF1;
-  --primary-soft: rgba(102, 252, 241, 0.15);
-  --accent: #45A29E;
+  /* Primärfarbe: modernes, leicht entsättigtes Blau-Violett */
+  --primary: #6366F1;
+  --primary-soft: rgba(99, 102, 241, 0.15);
+  /* Sekundärfarbe: dezentes Akzent-Blau/Lila */
+  --accent: #818CF8;
 
-  --danger: #66FCF1;
+  --danger: #EF4444;
   
   /* Zusätzliche Farben */
-  --dark-charcoal: #0B0C10;
-  --dark-slate: #1F2833;
-  --light-gray: #C5C6C7;
-  --cyan: #66FCF1;
-  --teal: #45A29E;
+  --dark-charcoal: #0F1419;
+  --dark-slate: #1A1F2E;
+  --light-gray: #E5E7EB;
 }
 
 [data-theme="light"] {
-  /* Light Mode Farben */
-  --bg-body: #F5F5F5;
+  /* Light Mode Farben - Modernes SaaS-Design */
+  --bg-body: #F9FAFB;
   --bg-surface: #FFFFFF;
   --bg-elevated: #FFFFFF;
 
-  --bg: #F5F5F5;
+  --bg: #F9FAFB;
   --card-bg: rgba(255, 255, 255, 0.95);
 
-  --text-primary: #0B0C10;
-  --text-muted: #1F2833;
-  --text: #0B0C10;
-  --border-subtle: #C5C6C7;
+  --text-primary: #111827;
+  --text-muted: #6B7280;
+  --text: #111827;
+  --border-subtle: rgba(156, 163, 175, 0.3);
 
-  --primary: #45A29E;
-  --primary-soft: rgba(69, 162, 158, 0.15);
-  --accent: #66FCF1;
+  --primary: #6366F1;
+  --primary-soft: rgba(99, 102, 241, 0.1);
+  --accent: #818CF8;
 
-  --danger: #45A29E;
+  --danger: #EF4444;
 }
 
-/* Schriftart */
+/* ============================================
+   MODERNE SAAS-TYPOGRAFIE
+   ============================================
+   Design-Update: Ersetzt Serif-Schrift (Arvo) durch moderne Sans-Serif-Kombination
+   
+   Font-Token:
+   - --font-heading: Space Grotesk (für H1-H6, Logo, wichtige Überschriften)
+     → Modern, gut lesbar, professionell, nicht "KI-generiert" wirkend
+   - --font-body: Inter (für Fließtext, Body, Labels, kleine Texte)
+     → Optimiert für Bildschirmlesbarkeit, hohe Lesbarkeit
+   
+   Typografie-Hierarchie:
+   - H1: 3.5rem (56px), bold, line-height 1.1
+   - H2: 3rem (48px), bold, line-height 1.2
+   - H3: 1.5rem (24px), semi-bold, line-height 1.3
+   - Body: 1rem (16px), regular, line-height 1.6
+   - Small: 0.875rem (14px), regular, line-height 1.5
+   
+   Konsistente Zeilenhöhen und Abstände für professionelles Erscheinungsbild.
+   ============================================ */
+
+/* Body-Text: Inter für optimale Bildschirmlesbarkeit */
 body {
   background: var(--bg-body);
   color: var(--text-primary);
-  font-family: var(--font-arvo), "Arvo", serif;
+  font-family: var(--font-body), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
   transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings: Space Grotesk für moderne, professionelle Überschriften */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading), "Space Grotesk", sans-serif;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: 3.5rem; /* 56px */
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+h2 {
+  font-size: 3rem; /* 48px */
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h3 {
+  font-size: 1.5rem; /* 24px */
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+h4 {
+  font-size: 1.25rem; /* 20px */
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* Body-Text und Labels */
+p {
+  font-size: 1rem; /* 16px */
+  line-height: 1.6;
+  color: var(--text-primary);
+}
+
+small, .text-small {
+  font-size: 0.875rem; /* 14px */
+  line-height: 1.5;
+  color: var(--text-muted);
 }
 
 [data-theme="light"] body {
@@ -145,10 +233,10 @@ main {
 }
 
 .logo {
-  font-family: var(--font-arvo), 'Arvo', serif;
+  font-family: var(--font-heading), 'Space Grotesk', sans-serif;
   font-size: 20px;
   font-weight: 700;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.02em;
   color: var(--text-primary);
   transition: color 0.3s ease;
   white-space: nowrap;
@@ -317,15 +405,15 @@ main {
 
 .nav-link:hover {
   color: var(--text-primary);
-  border-color: rgba(102, 252, 241, 0.3);
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(102, 252, 241, 0.3);
+  border-color: rgba(99, 102, 241, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
 }
 
 [data-theme="light"] .nav-link:hover {
   color: var(--text-primary);
-  border-color: rgba(69, 162, 158, 0.3);
-  box-shadow: 0 8px 16px rgba(69, 162, 158, 0.3);
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
 }
 
 /* Aktive Seite mit feiner Linie */
@@ -344,13 +432,13 @@ main {
 
 .nav-link.active:hover {
   border-color: var(--primary);
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(102, 252, 241, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
 }
 
 [data-theme="light"] .nav-link.active:hover {
   border-color: var(--primary);
-  box-shadow: 0 8px 16px rgba(69, 162, 158, 0.4);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.25);
 }
 
 .nav-cta {
@@ -557,13 +645,13 @@ main {
 .btn-primary:hover,
 .nav-cta:hover {
   transform: translateY(-1px);
-  box-shadow: 0 14px 30px rgba(102, 252, 241, 0.4);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
   background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
 }
 
 [data-theme="light"] .btn-primary:hover,
 [data-theme="light"] .nav-cta:hover {
-  box-shadow: 0 14px 30px rgba(69, 162, 158, 0.4);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
 }
 
 .btn-secondary {
@@ -625,7 +713,7 @@ a:not(.nav-link):hover {
   transition: all 0.3s ease;
 }
 
-/* Gradient Overlay für Hero Card - Neue Farbpalette mit Animation */
+/* Dezentes Gradient Overlay für Hero Card - Professionelles Design */
 .hero-card::before {
   content: '';
   position: absolute;
@@ -633,22 +721,21 @@ a:not(.nav-link):hover {
   right: 0;
   width: 120px;
   height: 120px;
-  background: radial-gradient(circle, rgba(218, 123, 147, 0.2), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08), transparent);
   border-radius: 50%;
   transform: translate(30%, -30%);
   pointer-events: none;
   z-index: 0;
   transition: all 0.3s ease;
-  animation: cardGlow 3s ease-in-out infinite;
 }
 
 .hero-card:hover {
-  border-color: #DA7B93;
-  box-shadow: 0 12px 40px rgba(218, 123, 147, 0.3);
+  border-color: var(--primary);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
 }
 
 .hero-card:hover::before {
-  background: radial-gradient(circle, rgba(218, 123, 147, 0.3), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent);
   width: 140px;
   height: 140px;
 }
@@ -742,7 +829,7 @@ a:not(.nav-link):hover {
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.1);
 }
 
-/* Gradient Overlay für About Card - Neue Farbpalette mit Animation */
+/* Dezentes Gradient Overlay für About Card - Professionelles Design */
 .about-card::before {
   content: '';
   position: absolute;
@@ -750,36 +837,35 @@ a:not(.nav-link):hover {
   right: 0;
   width: 150px;
   height: 150px;
-  background: radial-gradient(circle, rgba(102, 252, 241, 0.2), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08), transparent);
   border-radius: 50%;
   transform: translate(30%, -30%);
   pointer-events: none;
   transition: all 0.3s ease;
-  animation: cardGlow 3s ease-in-out infinite;
 }
 
 .about-card:hover {
   transform: translateY(-4px);
   border-color: var(--primary);
-  box-shadow: 0 12px 40px rgba(102, 252, 241, 0.3);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
 }
 
 .about-card:hover::before {
-  background: radial-gradient(circle, rgba(102, 252, 241, 0.3), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent);
   width: 170px;
   height: 170px;
 }
 
 [data-theme="light"] .about-card:hover {
-  box-shadow: 0 12px 40px rgba(69, 162, 158, 0.3);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
 }
 
 [data-theme="light"] .about-card::before {
-  background: radial-gradient(circle, rgba(69, 162, 158, 0.2), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08), transparent);
 }
 
 [data-theme="light"] .about-card:hover::before {
-  background: radial-gradient(circle, rgba(69, 162, 158, 0.3), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent);
 }
 
 .about-card h2 {
@@ -941,7 +1027,7 @@ a:not(.nav-link):hover {
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.1);
 }
 
-/* Gradient Overlay für Feature Cards - Neue Farbpalette mit Animation */
+/* Dezentes Gradient Overlay für Feature Cards - Professionelles Design */
 .feature-card::before {
   content: '';
   position: absolute;
@@ -949,12 +1035,11 @@ a:not(.nav-link):hover {
   right: 0;
   width: 100px;
   height: 100px;
-  background: radial-gradient(circle, rgba(102, 252, 241, 0.2), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08), transparent);
   border-radius: 50%;
   transform: translate(30%, -30%);
   pointer-events: none;
   transition: all 0.3s ease;
-  animation: cardGlow 3s ease-in-out infinite;
   z-index: 0;
   overflow: hidden;
 }
@@ -962,26 +1047,26 @@ a:not(.nav-link):hover {
 .feature-card:hover {
   transform: translateY(-4px);
   border-color: var(--primary);
-  box-shadow: 0 12px 40px rgba(102, 252, 241, 0.3);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
   background: var(--card-bg);
 }
 
 .feature-card:hover::before {
-  background: radial-gradient(circle, rgba(102, 252, 241, 0.3), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent);
   width: 120px;
   height: 120px;
 }
 
 [data-theme="light"] .feature-card:hover {
-  box-shadow: 0 12px 40px rgba(69, 162, 158, 0.3);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
 }
 
 [data-theme="light"] .feature-card::before {
-  background: radial-gradient(circle, rgba(69, 162, 158, 0.2), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08), transparent);
 }
 
 [data-theme="light"] .feature-card:hover::before {
-  background: radial-gradient(circle, rgba(69, 162, 158, 0.3), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent);
 }
 .feature-icon {
   font-size: 40px;
@@ -1031,7 +1116,7 @@ a:not(.nav-link):hover {
   background: var(--card-bg) !important;
 }
 
-/* Gradient Overlay für Page Preview Cards - Neue Farbpalette mit Animation */
+/* Dezentes Gradient Overlay für Page Preview Cards - Professionelles Design */
 .page-preview-card::before {
   content: '';
   position: absolute;
@@ -1039,36 +1124,35 @@ a:not(.nav-link):hover {
   right: 0;
   width: 100px;
   height: 100px;
-  background: radial-gradient(circle, rgba(102, 252, 241, 0.2), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08), transparent);
   border-radius: 50%;
   transform: translate(30%, -30%);
   pointer-events: none;
   transition: all 0.3s ease;
-  animation: cardGlow 3s ease-in-out infinite;
 }
 
 .page-preview-card:hover {
   transform: translateY(-4px);
   border-color: var(--primary);
-  box-shadow: 0 12px 40px rgba(102, 252, 241, 0.3);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
 }
 
 .page-preview-card:hover::before {
-  background: radial-gradient(circle, rgba(102, 252, 241, 0.3), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent);
   width: 120px;
   height: 120px;
 }
 
 [data-theme="light"] .page-preview-card:hover {
-  box-shadow: 0 12px 40px rgba(69, 162, 158, 0.3);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
 }
 
 [data-theme="light"] .page-preview-card::before {
-  background: radial-gradient(circle, rgba(69, 162, 158, 0.2), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08), transparent);
 }
 
 [data-theme="light"] .page-preview-card:hover::before {
-  background: radial-gradient(circle, rgba(69, 162, 158, 0.3), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent);
 }
 
 .page-preview-card h3,
@@ -1185,7 +1269,7 @@ a:not(.nav-link):hover {
   overflow: hidden;
 }
 
-/* Gradient Overlay für Pricing Cards - Neue Farbpalette mit Animation */
+/* Dezentes Gradient Overlay für Pricing Cards - Professionelles Design */
 .pricing-card::before {
   content: '';
   position: absolute;
@@ -1193,22 +1277,21 @@ a:not(.nav-link):hover {
   right: 0;
   width: 100px;
   height: 100px;
-  background: radial-gradient(circle, rgba(102, 252, 241, 0.2), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08), transparent);
   border-radius: 50%;
   transform: translate(30%, -30%);
   pointer-events: none;
   transition: all 0.3s ease;
-  animation: cardGlow 3s ease-in-out infinite;
 }
 
 .pricing-card:hover {
   transform: translateY(-4px);
   border-color: var(--primary);
-  box-shadow: 0 12px 40px rgba(102, 252, 241, 0.3);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
 }
 
 .pricing-card:hover::before {
-  background: radial-gradient(circle, rgba(102, 252, 241, 0.3), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent);
   width: 120px;
   height: 120px;
 }
@@ -1220,29 +1303,29 @@ a:not(.nav-link):hover {
 }
 
 .pricing-card.featured::before {
-  background: radial-gradient(circle, rgba(102, 252, 241, 0.4), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent);
 }
 
 .pricing-card.featured:hover {
   transform: scale(1.05) translateY(-4px);
   border-color: var(--primary);
-  box-shadow: 0 12px 40px rgba(102, 252, 241, 0.5);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
 }
 
 [data-theme="light"] .pricing-card:hover {
-  box-shadow: 0 12px 40px rgba(69, 162, 158, 0.3);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
 }
 
 [data-theme="light"] .pricing-card::before {
-  background: radial-gradient(circle, rgba(69, 162, 158, 0.2), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08), transparent);
 }
 
 [data-theme="light"] .pricing-card.featured::before {
-  background: radial-gradient(circle, rgba(69, 162, 158, 0.4), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent);
 }
 
 [data-theme="light"] .pricing-card.featured:hover {
-  box-shadow: 0 12px 40px rgba(69, 162, 158, 0.5);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2);
 }
 
 .badge {
@@ -1515,21 +1598,7 @@ a:not(.nav-link):hover {
   transform: translateY(1px) scale(0.98);
 }
 
-/* Pulsierende Glow-Animation für Cards - Neue Farbpalette */
-@keyframes cardGlow {
-  0% {
-    opacity: 0.2;
-    transform: translate(30%, -30%) scale(1);
-  }
-  50% {
-    opacity: 0.4;
-    transform: translate(30%, -30%) scale(1.1);
-  }
-  100% {
-    opacity: 0.2;
-    transform: translate(30%, -30%) scale(1);
-  }
-}
+/* Entfernt: Pulsierende Glow-Animation - zu aufdringlich für professionelles SaaS-Design */
 
 /* Theme Toggle Button */
 .theme-toggle {
@@ -1568,12 +1637,12 @@ a:not(.nav-link):hover {
 }
 
 [data-theme="light"] .theme-toggle {
-  border-color: #FFD700;
+  border-color: var(--primary);
 }
 
 [data-theme="light"] .theme-toggle::after {
   opacity: 0.8;
-  border-color: #FFD700;
+  border-color: var(--primary);
   animation: themeTogglePulseLight 2s ease-in-out infinite;
 }
 
@@ -1583,8 +1652,8 @@ a:not(.nav-link):hover {
 }
 
 [data-theme="light"] .theme-toggle:hover {
-  border-color: #FFD700;
-  box-shadow: 0 0 16px rgba(255, 215, 0, 0.5);
+  border-color: var(--primary);
+  box-shadow: 0 0 16px rgba(99, 102, 241, 0.3);
 }
 
 .theme-toggle:active {
@@ -1628,16 +1697,16 @@ a:not(.nav-link):hover {
 
 /* Mond (Light Mode) */
 .moon-path {
-  stroke: #1F2833;
+  stroke: var(--text-primary);
   stroke-width: 2;
-  fill: #1F2833;
+  fill: var(--text-primary);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: 12px 12px;
 }
 
 [data-theme="light"] .moon-path {
-  stroke: #1F2833;
-  fill: #1F2833;
+  stroke: var(--text-primary);
+  fill: var(--text-primary);
 }
 
 @keyframes themeTogglePulse {
@@ -1777,7 +1846,7 @@ a .logo:active {
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.1);
 }
 
-/* Gradient Overlay für Contact Form Card - Neue Farbpalette mit Animation */
+/* Dezentes Gradient Overlay für Contact Form Card - Professionelles Design */
 .contact-form-card::before {
   content: '';
   position: absolute;
@@ -1785,35 +1854,34 @@ a .logo:active {
   right: 0;
   width: 100px;
   height: 100px;
-  background: radial-gradient(circle, rgba(102, 252, 241, 0.2), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08), transparent);
   border-radius: 50%;
   transform: translate(30%, -30%);
   pointer-events: none;
   transition: all 0.3s ease;
-  animation: cardGlow 3s ease-in-out infinite;
 }
 
 .contact-form-card:hover {
   border-color: var(--primary);
-  box-shadow: 0 12px 40px rgba(102, 252, 241, 0.3);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
 }
 
 .contact-form-card:hover::before {
-  background: radial-gradient(circle, rgba(102, 252, 241, 0.3), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent);
   width: 120px;
   height: 120px;
 }
 
 [data-theme="light"] .contact-form-card:hover {
-  box-shadow: 0 12px 40px rgba(69, 162, 158, 0.3);
+  box-shadow: 0 8px 24px rgba(99, 102, 241, 0.15);
 }
 
 [data-theme="light"] .contact-form-card::before {
-  background: radial-gradient(circle, rgba(69, 162, 158, 0.2), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08), transparent);
 }
 
 [data-theme="light"] .contact-form-card:hover::before {
-  background: radial-gradient(circle, rgba(69, 162, 158, 0.3), transparent);
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.12), transparent);
 }
 
 .contact-form h2 {
@@ -1859,12 +1927,12 @@ a .logo:active {
 .contact-form textarea:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 1px rgba(102, 252, 241, 0.3);
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3);
 }
 
 [data-theme="light"] .contact-form input:focus,
 [data-theme="light"] .contact-form textarea:focus {
-  box-shadow: 0 0 0 1px rgba(69, 162, 158, 0.3);
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.3);
 }
 
 .contact-details {

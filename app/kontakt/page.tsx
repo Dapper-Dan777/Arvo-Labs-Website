@@ -94,7 +94,7 @@ export default function ContactPage() {
           <h3>Direkter Kontakt</h3>
           <p>
             E-Mail:{' '}
-            <a href="mailto:support@arvolabs.com">support@arvolabs.com</a>
+            <a href="mailto:info@arvo-labs.de">info@arvo-labs.de</a>
           </p>
           <p>Wir antworten in der Regel innerhalb von 24 Stunden.</p>
         </div>

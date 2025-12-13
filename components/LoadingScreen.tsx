@@ -29,7 +29,7 @@ export default function LoadingScreen() {
         {/* Arvo Labs Text */}
         <h1
           style={{
-            fontFamily: "var(--font-arvo), 'Arvo', serif",
+            fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
             fontSize: '48px',
             fontWeight: 700,
             color: 'var(--text-primary)',
@@ -38,7 +38,7 @@ export default function LoadingScreen() {
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent',
             backgroundClip: 'text',
-            letterSpacing: '-1px',
+            letterSpacing: '-0.02em',
           }}
         >
           Arvo Labs
@@ -67,7 +67,7 @@ export default function LoadingScreen() {
               left: 0,
               top: 0,
               animation: 'loadingBarAnimation 1.5s ease-in-out infinite',
-              boxShadow: '0 0 10px rgba(102, 252, 241, 0.5)',
+              boxShadow: '0 0 8px rgba(99, 102, 241, 0.3)',
             }}
           />
         </div>

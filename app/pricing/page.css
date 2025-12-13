@@ -1,0 +1,42 @@
+/**
+ * Pricing-Seite Styles
+ * 
+ * Responsive Styles für die Pricing-Seite und Vergleichstabelle
+ */
+
+/* Responsive Pricing Grid - 4 Spalten */
+@media (max-width: 1400px) {
+  .pricing-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .pricing-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pricing-grid {
+    grid-template-columns: 1fr !important;
+    padding: 0 24px;
+  }
+
+  /* Feature Table auf Mobile: Horizontal scrollbar */
+  .feature-table-container {
+    margin: 0 -24px;
+    padding: 0 24px;
+  }
+
+  .feature-table-container table {
+    font-size: 13px;
+  }
+
+  .feature-table-container th,
+  .feature-table-container td {
+    padding: 12px 8px !important;
+  }
+}

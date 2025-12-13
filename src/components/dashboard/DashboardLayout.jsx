@@ -1,5 +1,19 @@
 // src/components/dashboard/DashboardLayout.jsx
 import ThemeToggle from '@/components/ThemeToggle';
+import {
+  Home,
+  Inbox,
+  MessageCircle,
+  Users,
+  FileText,
+  LayoutDashboard,
+  Square,
+  FileEdit,
+  Mail,
+  Target,
+  Clock,
+  MoreHorizontal,
+} from 'lucide-react';
 
 function DashboardLayout({
   user,
@@ -24,6 +38,27 @@ function DashboardLayout({
     TIMESHEETS: 'Timesheets',
     MORE: 'Mehr',
   };
+
+  // Icon-Mapping für Menüpunkte
+  const menuIcons = {
+    'Startseite': Home,
+    'Posteingang': Inbox,
+    'Chat': MessageCircle,
+    'Teams': Users,
+    'Dokumente': FileText,
+    'Dashboards': LayoutDashboard,
+    'Whiteboards': Square,
+    'Formulare': FileEdit,
+    'Mail': Mail,
+    'Ziele': Target,
+    'Timesheets': Clock,
+    'Mehr': MoreHorizontal,
+  };
+
+  // Badge-Mapping (kann später dynamisch gemacht werden)
+  const menuBadges = {
+    'Posteingang': 3, // Beispiel-Badge
+  };
   return (
     <div
       style={{
@@ -35,16 +70,16 @@ function DashboardLayout({
         transition: 'background-color 0.3s ease, color 0.3s ease',
       }}
     >
-      {/* Sidebar */}
+      {/* Sidebar - Modernes Design mit dunklem Gradient und magenta-violettem Neon-Glow */}
       <aside
         style={{
           width: '260px',
-          borderRight: '1px solid var(--border-subtle)',
           padding: '24px 16px',
           display: 'flex',
           flexDirection: 'column',
           gap: '32px',
-          background: 'var(--bg-surface)',
+          background: 'linear-gradient(to bottom, #000000, #0a0a0a, #000000)',
+          borderRight: '1px solid rgba(255, 255, 255, 0.05)',
           transition: 'background-color 0.3s ease, border-color 0.3s ease',
           flexShrink: 0,
           overflowY: 'auto',
@@ -53,68 +88,118 @@ function DashboardLayout({
         {/* Logo / Brand */}
         <div
           style={{
-            fontFamily: "var(--font-arvo), 'Arvo', serif",
-            fontWeight: 700,
-            fontSize: '20px',
-            padding: '8px 12px',
-            background: 'linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '8px',
           }}
         >
-          Arvo Labs
+          <span
+            style={{
+              fontFamily: "var(--font-heading), 'Space Grotesk', sans-serif",
+              fontSize: '18px',
+              fontWeight: 700,
+              letterSpacing: '0.02em',
+              color: '#ffffff',
+            }}
+          >
+            Arvo Labs
+          </span>
         </div>
 
         {/* Hauptnavigation */}
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          {Object.values(MENUS).map((item) => (
-            <button
-              key={item}
-              onClick={() => setActiveMenu(item)}
-              className="dashboard-btn"
-              style={{
-                textAlign: 'left',
-                padding: '12px 14px',
-                borderRadius: '10px',
-                border: 'none',
-                background:
-                  activeMenu === item
-                    ? 'rgba(102, 252, 241, 0.15)'
-                    : 'transparent',
-                color: activeMenu === item ? 'var(--primary)' : 'var(--text-muted)',
-                fontSize: '14px',
-                fontWeight: activeMenu === item ? 500 : 400,
-                cursor: 'pointer',
-                transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-                borderLeft: activeMenu === item ? '3px solid var(--primary)' : '3px solid transparent',
-                position: 'relative',
-                overflow: 'hidden',
-              }}
-              onMouseEnter={(e) => {
-                if (activeMenu !== item) {
-                  e.target.style.background = 'rgba(99,102,241,0.08)';
-                  e.target.style.color = '#c7d2fe';
-                  e.target.style.transform = 'translateX(4px)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (activeMenu !== item) {
-                  e.target.style.background = 'transparent';
-                  e.target.style.color = '#9ca3af';
-                  e.target.style.transform = 'translateX(0)';
-                }
-              }}
-              onMouseDown={(e) => {
-                e.target.style.transform = 'scale(0.98)';
-              }}
-              onMouseUp={(e) => {
-                e.target.style.transform = activeMenu === item ? 'translateX(0)' : 'translateX(4px)';
-              }}
-            >
-              {item}
-            </button>
-          ))}
+        <nav style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {Object.values(MENUS).map((item) => {
+            const Icon = menuIcons[item];
+            const badge = menuBadges[item];
+            const isActive = activeMenu === item;
+
+            return (
+              <button
+                key={item}
+                onClick={() => setActiveMenu(item)}
+                className="dashboard-btn"
+                style={{
+                  display: 'flex',
+                  width: '100%',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  borderRadius: '16px',
+                  padding: '10px 12px',
+                  fontSize: '14px',
+                  fontWeight: isActive ? 500 : 400,
+                  cursor: 'pointer',
+                  transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                  border: isActive ? 'none' : '1px solid rgba(255, 255, 255, 0.05)',
+                  background: isActive
+                    ? 'linear-gradient(to right, rgba(99, 102, 241, 0.7), rgba(99, 102, 241, 0.4), transparent)'
+                    : 'rgba(255, 255, 255, 0)',
+                  color: isActive ? '#ffffff' : 'rgba(255, 255, 255, 0.6)',
+                  boxShadow: isActive
+                    ? '0 0 25px rgba(99, 102, 241, 0.55)'
+                    : 'none',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  textAlign: 'left',
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                    e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0)';
+                    e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)';
+                  }
+                }}
+              >
+                <span
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                  }}
+                >
+                  {Icon && (
+                    <Icon
+                      size={18}
+                      style={{
+                        color: isActive
+                          ? '#ffffff'
+                          : 'rgba(255, 255, 255, 0.5)',
+                        filter: isActive
+                          ? 'drop-shadow(0 0 8px rgba(99, 102, 241, 0.7))'
+                          : 'none',
+                        transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+                      }}
+                    />
+                  )}
+                  <span>{item}</span>
+                </span>
+
+                {badge && (
+                  <span
+                    style={{
+                      display: 'flex',
+                      height: '20px',
+                      minWidth: '24px',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      borderRadius: '9999px',
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      padding: '0 6px',
+                      fontSize: '11px',
+                      color: 'rgba(255, 255, 255, 0.8)',
+                      fontWeight: 500,
+                    }}
+                  >
+                    {badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </nav>
 
         {/* Spacer */}
@@ -124,7 +209,7 @@ function DashboardLayout({
         <div
           style={{
             paddingTop: '24px',
-            borderTop: '1px solid rgba(255,255,255,0.05)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.05)',
             display: 'flex',
             flexDirection: 'column',
             gap: '12px',
@@ -236,26 +321,26 @@ function DashboardLayout({
                 className="dashboard-btn"
                 onClick={onManageCards}
                 style={{
-                  background: 'linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)',
+                  background: 'linear-gradient(135deg, #6366F1 0%, #818CF8 100%)',
                   border: 'none',
-                  color: 'var(--bg-body)',
+                  color: '#ffffff',
                   borderRadius: '10px',
                   padding: '10px 20px',
                   cursor: 'pointer',
                   fontSize: '13px',
                   fontWeight: 500,
                   transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-                  boxShadow: '0 4px 12px rgba(102, 252, 241, 0.3)',
+                  boxShadow: '0 4px 12px rgba(99, 102, 241, 0.25)',
                   position: 'relative',
                   overflow: 'hidden',
                 }}
                 onMouseEnter={(e) => {
                   e.target.style.transform = 'translateY(-2px)';
-                  e.target.style.boxShadow = '0 6px 16px rgba(102, 252, 241, 0.4)';
+                  e.target.style.boxShadow = '0 6px 16px rgba(99, 102, 241, 0.3)';
                 }}
                 onMouseLeave={(e) => {
                   e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = '0 4px 12px rgba(102, 252, 241, 0.3)';
+                  e.target.style.boxShadow = '0 4px 12px rgba(99, 102, 241, 0.25)';
                 }}
               >
                 Karten verwalten

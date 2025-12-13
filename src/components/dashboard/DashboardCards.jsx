@@ -502,13 +502,13 @@ function DashboardCards({ user, onCardClick, isCardsPage = false }) {
             fontWeight: 500,
             cursor: 'pointer',
             transition: 'all 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-            boxShadow: '0 4px 12px rgba(102, 252, 241, 0.3)',
+            boxShadow: '0 4px 12px rgba(99, 102, 241, 0.25)',
             position: 'relative',
             overflow: 'hidden',
           }}
           onMouseEnter={(e) => {
             e.target.style.transform = 'translateY(-2px)';
-            e.target.style.boxShadow = '0 6px 16px rgba(102, 252, 241, 0.4)';
+            e.target.style.boxShadow = '0 6px 16px rgba(99, 102, 241, 0.3)';
           }}
           onMouseLeave={(e) => {
             e.target.style.transform = 'translateY(0)';
