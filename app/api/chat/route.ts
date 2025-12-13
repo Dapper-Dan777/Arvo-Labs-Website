@@ -74,12 +74,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Validiere action
-    const validActions: Array<'summary' | 'keypoints' | 'default'> = [
+    type ActionType = 'summary' | 'keypoints' | 'default';
+    const validActions: ActionType[] = [
       'summary',
       'keypoints',
       'default',
     ];
-    const selectedAction = validActions.includes(action) ? action : 'default';
+    const selectedAction: ActionType = validActions.includes(action as ActionType) 
+      ? (action as ActionType) 
+      : 'default';
 
     console.log('[Chat API] Verarbeite Anfrage:', {
       action: selectedAction,
