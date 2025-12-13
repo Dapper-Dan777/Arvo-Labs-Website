@@ -235,7 +235,7 @@ export default function PricingCard({
             // Starter/Pro/Enterprise: CheckoutButton mit korrekter Plan-ID (User oder Team)
             <CheckoutButton
               planId={plan.clerkPlanId}
-              planPeriod={billingPeriod === 'year' ? 'yearly' : 'monthly'}
+              planPeriod={billingPeriod === 'year' ? 'annual' : 'month'}
               newSubscriptionRedirectUrl="/dashboard"
               onSubscriptionComplete={() => {
                 console.log(`${plan.name}-Abonnement erfolgreich abgeschlossen! (${billingMode})`);
