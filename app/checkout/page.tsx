@@ -22,7 +22,9 @@ export default function CheckoutPage({
 }) {
   const params = use(searchParams);
   const planId = typeof params.planId === 'string' ? params.planId : undefined;
-  const period = (typeof params.period === 'string' ? params.period : 'month') as 'month' | 'year';
+  const periodParam = typeof params.period === 'string' ? params.period : 'month';
+  // Konvertiere 'month'/'year' zu dem von Clerk erwarteten Typ
+  const period = periodParam === 'year' ? 'yearly' : 'monthly';
 
   // Wenn eine spezifische Plan-ID übergeben wurde, zeige Checkout-Button
   if (planId) {
@@ -42,7 +44,7 @@ export default function CheckoutPage({
             </p>
             <CheckoutButton
               planId={planId}
-              planPeriod={period}
+              planPeriod={period as 'monthly' | 'yearly'}
               newSubscriptionRedirectUrl="/dashboard"
             >
               <button className="btn-primary" style={{ fontSize: '16px', padding: '12px 32px' }}>
