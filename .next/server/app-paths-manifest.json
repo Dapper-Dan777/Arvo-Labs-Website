@@ -1,6 +1,10 @@
 {
-  "/kontakt/page": "app/kontakt/page.js",
-  "/pricing/page": "app/pricing/page.js",
   "/preise/page": "app/preise/page.js",
+  "/pricing/page": "app/pricing/page.js",
+  "/funktionen/page": "app/funktionen/page.js",
+  "/use-cases/page": "app/use-cases/page.js",
+  "/kontakt/page": "app/kontakt/page.js",
+  "/page": "app/page.js",
+  "/blog/page": "app/blog/page.js",
   "/dashboard/page": "app/dashboard/page.js"
 }

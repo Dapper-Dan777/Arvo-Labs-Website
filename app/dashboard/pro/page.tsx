@@ -196,14 +196,14 @@ export default function ProDashboardPage() {
         />
       ) : activeMenu === MENUS.GOALS ? (
         <DashboardGoals
-          goals={goals}
+          goals={goals as any}
           onAddGoal={() => {}}
           onDeleteGoal={() => {}}
           onToggleTask={() => {}}
         />
       ) : activeMenu === MENUS.TIMESHEETS ? (
         <DashboardTimesheets
-          entries={timesheetEntries}
+          entries={timesheetEntries as any}
           onAddEntry={() => {}}
           onDeleteEntry={() => {}}
           onToggleStatus={() => {}}
